@@ -13,5 +13,5 @@ jobs:
     steps:
       - name: Trigger News Fetch
         run: |
-          curl -X GET "https://read-2-rank-backend.onrender.com//api/cron/trigger" \
+          curl -X GET "https://read-2-rank-backend.onrender.com/api/cron/trigger" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
