@@ -1257,15 +1257,7 @@ app.get('/api/dashboard/summary', verifyToken, (req, res) => {
 //     });
 // });
 
-// =====================================================
-// SERVE STATIC FILES
-// =====================================================
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
 
 
 // Corn Handling using GitHub Actions
@@ -1359,11 +1351,14 @@ app.get('/api/cron/trigger', async (req, res) => {
     }
 });
 
+// =====================================================
+// SERVE STATIC FILES
+// =====================================================
 
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// Health check for Render
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 
