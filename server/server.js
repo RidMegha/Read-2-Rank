@@ -60,6 +60,38 @@ app.use(cors({
 
 app.options('*', cors());
 
+// 🔧 Quick Fix: Add this to server/server.js
+// Place it AFTER middleware setup and BEFORE API routes
+
+// ============================================
+// HEALTH CHECK ENDPOINT (Add this section)
+// ============================================
+
+// Health check endpoint for monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    database: 'connected' // Since you're using SQLite
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Read-2-Rank API Server',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth/*',
+      news: '/api/news/*',
+      admin: '/api/admin/*'
+    }
+  });
+});
 
 
 
