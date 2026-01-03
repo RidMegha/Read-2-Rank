@@ -24,8 +24,8 @@ const RevisionHub = () => {
 
     useEffect(() => {
         const fetchGK = async () => {
-            // const token = localStorage.getItem('token');
-            // if (!token) return;
+            const token = localStorage.getItem('token');
+             if (!token) return;
             
             setLoading(true);
             try {
@@ -43,7 +43,7 @@ const RevisionHub = () => {
 
                 if (url) {
                     const res = await axios.get(url, 
-                        //{ headers: { Authorization: `Bearer ${token}` }}
+                        { headers: { Authorization: `Bearer ${token}` }}
                     );
                     setGkData(res.data);
                 }
@@ -177,19 +177,19 @@ const RevisionHub = () => {
     };
 
     const toggleBookmark = async (id, isBookmarked) => {
-    // const token = localStorage.getItem('token');
-    // if (!token) return;
+    const token = localStorage.getItem('token');
+    if (!token) return;
 
     try {
         if (isBookmarked) {
             await axios.delete(`/api/gk/bookmark/${id}`, 
-                //{ headers: { Authorization: `Bearer ${token}` }}
+                { headers: { Authorization: `Bearer ${token}` }}
             );
         } else {
             await axios.post(
                 `/api/gk/bookmark`,
                 { gk_id: id },
-                // { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
         }
 
