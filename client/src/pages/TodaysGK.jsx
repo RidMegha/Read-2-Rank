@@ -13,10 +13,10 @@ const TodaysGK = () => {
 
     useEffect(() => {
         const fetchGK = async () => {
-            // const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token');
             try {
                 const res = await axios.get('/api/gk/today', 
-                //    { headers: { Authorization: `Bearer ${token}` }}
+                   { headers: { Authorization: `Bearer ${token}` }}
                 );
                 setGkPoints(res.data);
 
@@ -25,7 +25,7 @@ const TodaysGK = () => {
                     await axios.post(
                         '/api/activity',
                         { type: 'GK_VIEW' },
-                        // { headers: { Authorization: `Bearer ${token}` } }
+                        { headers: { Authorization: `Bearer ${token}` } }
                     ).catch(err => console.error('Activity log failed:', err));
                 }
             } catch (error) {
@@ -39,25 +39,25 @@ const TodaysGK = () => {
     }, [user]);
 
     const toggleBookmark = async (id, isBookmarked) => {
-        // const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
 
         try {
             if (isBookmarked) {
                 await axios.delete(`/api/gk/bookmark/${id}`, 
-                //    {headers: { Authorization: `Bearer ${token}` }}
+                   {headers: { Authorization: `Bearer ${token}` }}
                 );
             } else {
                 await axios.post(
                     '/api/gk/bookmark',
                     { gk_id: id },
-                    // { headers: { Authorization: `Bearer ${token}` } }
+                    { headers: { Authorization: `Bearer ${token}` } }
                 );
 
                 // ✅ Log Bookmark Activity
                 await axios.post(
                     '/api/activity',
                     { type: 'BOOKMARK', gk_id: id },
-                    // { headers: { Authorization: `Bearer ${token}` } }
+                    { headers: { Authorization: `Bearer ${token}` } }
                 ).catch(err => console.error('Activity log failed:', err));
             }
 
