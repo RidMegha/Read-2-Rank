@@ -37,10 +37,16 @@ const { mockYearlyData, mockMonthlyData, getMockDailyDataDecember2025 } = requir
 
 const app = express();
 
-const allowedOrigins =
-  process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL]
-    : ['http://localhost:5173'];
+// Replace your allowedOrigins section with this:
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+  'https://read-2-rank.onrender.com'
+].filter(Boolean); // Remove undefined values
+
+console.log('✅ Allowed origins:', allowedOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -48,8 +54,10 @@ app.use(cors({
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS allowed for:', origin);
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked for:', origin);
       callback(new Error('CORS not allowed from this origin'));
     }
   },
