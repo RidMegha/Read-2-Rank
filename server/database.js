@@ -1,115 +1,190 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
 
-const dbPath = path.resolve(__dirname, 'database.db');
-// const db = new sqlite3.Database(dbPath);
+// Use DATABASE_URL from environment variable
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-const db = new sqlite3.Database(dbPath, (err) => {
+// Test connection
+pool.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.error('❌ Database connection error:', err);
         process.exit(1);
     } else {
-        console.log('✅ Connected to SQLite database at:', dbPath);
+        console.log('✅ Connected to PostgreSQL database at:', new Date(res.rows[0].now).toLocaleString());
     }
 });
 
-db.run('PRAGMA foreign_keys = ON');
-
-db.serialize(() => {
-    // Users table
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        exam_type TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`, (err) => {
-        if (err) console.error('❌ Error creating users table:', err);
-        else console.log('✅ Users table ready');
-    });
-
-    // News Cache table (to store API responses and avoid hitting rate limits)
-    db.run(`CREATE TABLE IF NOT EXISTS news_cache (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        query_key TEXT UNIQUE NOT NULL, -- e.g., "top-headlines-in", "search-international"
-        data TEXT NOT NULL, -- JSON string
-        fetched_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
-    // News Archive table (to store individual articles for 30 days)
-    db.run(`CREATE TABLE IF NOT EXISTS news_archive (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        url TEXT,
-        image_url TEXT,
-        source_name TEXT,
-        published_at DATETIME,
-        category TEXT, -- 'Indian' or 'Global' or specific category
-        fetched_date DATE DEFAULT (date('now'))
-    )`);
-
-    // GK Points table
-    db.run(`CREATE TABLE IF NOT EXISTS gk_points (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        content TEXT NOT NULL,
-        category TEXT,
-        priority TEXT CHECK(priority IN ('High', 'Medium', 'Low')),
-        date DATE DEFAULT (date('now')),
-        source_url TEXT
-    )`);
-
-    // Bookmarks table
-    db.run(`CREATE TABLE IF NOT EXISTS bookmarks (
-        user_id INTEGER,
-        gk_id INTEGER,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (user_id, gk_id),
-        FOREIGN KEY(user_id) REFERENCES users(id),
-        FOREIGN KEY(gk_id) REFERENCES gk_points(id)
-    )`);
+// Initialize tables
+const initializeTables = async () => {
+    const client = await pool.connect();
     
-    // Revision/History (optional but good for "Revisions Completed")
-    db.run(`CREATE TABLE IF NOT EXISTS revisions (
-        user_id INTEGER,
-        gk_id INTEGER,
-        reviewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(user_id) REFERENCES users(id),
-        FOREIGN KEY(gk_id) REFERENCES gk_points(id)
-    )`);
-    // ================= USER ACTIVITY TABLE (DASHBOARD CORE) =================
-db.run(`CREATE TABLE IF NOT EXISTS user_activity (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    activity_type TEXT NOT NULL, -- 'gk_view', 'bookmark', 'revision', 'quiz'
-    gk_id INTEGER,
-    is_correct INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(gk_id) REFERENCES gk_points(id)
-)`);
+    try {
+        await client.query('BEGIN');
 
-// Add to your database.js file after the other CREATE TABLE statements
+        // Users table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                exam_type TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Users table ready');
 
-db.run(`
-    CREATE TABLE IF NOT EXISTS password_resets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        token TEXT NOT NULL UNIQUE,
-        expires_at TEXT NOT NULL,
-        used INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-`, (err) => {
-    if (err) {
-        console.error('Error creating password_resets table:', err);
-    } else {
+        // News Cache table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS news_cache (
+                id SERIAL PRIMARY KEY,
+                query_key TEXT UNIQUE NOT NULL,
+                data TEXT NOT NULL,
+                fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ News cache table ready');
+
+        // News Archive table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS news_archive (
+                id SERIAL PRIMARY KEY,
+                title TEXT,
+                description TEXT,
+                url TEXT,
+                image_url TEXT,
+                source_name TEXT,
+                published_at TIMESTAMP,
+                category TEXT,
+                fetched_date DATE DEFAULT CURRENT_DATE
+            )
+        `);
+        console.log('✅ News archive table ready');
+
+        // GK Points table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS gk_points (
+                id SERIAL PRIMARY KEY,
+                content TEXT NOT NULL,
+                category TEXT,
+                priority TEXT CHECK(priority IN ('High', 'Medium', 'Low')),
+                date DATE DEFAULT CURRENT_DATE,
+                source_url TEXT
+            )
+        `);
+        console.log('✅ GK points table ready');
+
+        // Bookmarks table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS bookmarks (
+                user_id INTEGER,
+                gk_id INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, gk_id),
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY(gk_id) REFERENCES gk_points(id) ON DELETE CASCADE
+            )
+        `);
+        console.log('✅ Bookmarks table ready');
+
+        // Revisions table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS revisions (
+                user_id INTEGER,
+                gk_id INTEGER,
+                reviewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY(gk_id) REFERENCES gk_points(id) ON DELETE CASCADE
+            )
+        `);
+        console.log('✅ Revisions table ready');
+
+        // User Activity table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS user_activity (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                activity_type TEXT NOT NULL,
+                gk_id INTEGER,
+                is_correct INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY(gk_id) REFERENCES gk_points(id) ON DELETE CASCADE
+            )
+        `);
+        console.log('✅ User activity table ready');
+
+        // Password Resets table
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS password_resets (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                token TEXT NOT NULL UNIQUE,
+                expires_at TIMESTAMP NOT NULL,
+                used INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        `);
         console.log('✅ Password resets table ready');
+
+        await client.query('COMMIT');
+        console.log('✅ All database tables initialized');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('❌ Error initializing tables:', err);
+        throw err;
+    } finally {
+        client.release();
     }
+};
+
+// Initialize tables on startup
+initializeTables().catch(err => {
+    console.error('Failed to initialize database:', err);
+    process.exit(1);
 });
 
-});
+// Export wrapper functions that match SQLite API
+module.exports = {
+    // Run query (INSERT, UPDATE, DELETE)
+    run: (sql, params = [], callback) => {
+        pool.query(sql, params, (err, result) => {
+            if (callback) {
+                if (err) {
+                    callback(err);
+                } else {
+                    // Mimic SQLite's this.lastID and this.changes
+                    const context = {
+                        lastID: result.rows[0]?.id || null,
+                        changes: result.rowCount || 0
+                    };
+                    callback.call(context, null);
+                }
+            }
+        });
+    },
 
-module.exports = db;
+    // Get single row (SELECT)
+    get: (sql, params = [], callback) => {
+        pool.query(sql, params, (err, result) => {
+            if (callback) {
+                callback(err, result?.rows[0] || null);
+            }
+        });
+    },
+
+    // Get all rows (SELECT)
+    all: (sql, params = [], callback) => {
+        pool.query(sql, params, (err, result) => {
+            if (callback) {
+                callback(err, result?.rows || []);
+            }
+        });
+    },
+
+    // For direct pool access if needed
+    pool
+};
