@@ -128,17 +128,40 @@ app.post('/api/auth/signup', (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
     const hashedPassword = bcrypt.hashSync(password, 8);
-    db.run('INSERT INTO users (name, email, password, exam_type) VALUES ($1, $2, $3, $4) RETURNING id', 
+    
+    // Insert user and get the ID
+    db.run('INSERT INTO users (name, email, password, exam_type) VALUES ($1, $2, $3, $4)', 
         [name, email, hashedPassword, exam_type], 
         function(err) {
             if (err) {
                 if (err.message.includes('unique') || err.code === '23505') {
                     return res.status(400).json({ message: 'Email already exists' });
                 }
+                console.error('Signup error:', err);
                 return res.status(500).json({ message: 'Database error' });
             }
-            const token = generateToken({ id: this.lastID, email });
-            return res.status(201).json({ token, user: { id: this.lastID, name, email, exam_type } });
+            
+            // Fetch the newly created user to get their ID
+            db.get('SELECT id, name, email, exam_type FROM users WHERE email = $1', [email], (err, user) => {
+                if (err) {
+                    console.error('Error fetching new user:', err);
+                    return res.status(500).json({ message: 'Database error' });
+                }
+                if (!user) {
+                    return res.status(500).json({ message: 'User created but could not retrieve data' });
+                }
+                
+                const token = generateToken({ id: user.id, email });
+                return res.status(201).json({ 
+                    token, 
+                    user: { 
+                        id: user.id, 
+                        name: user.name, 
+                        email: user.email, 
+                        exam_type: user.exam_type 
+                    } 
+                });
+            });
         }
     );
 });
@@ -876,7 +899,7 @@ app.get('/api/cron/trigger', async (req, res) => {
     console.log('✅ Authorized cron job started');
     try {
         await new Promise((resolve, reject) => {
-            db.run("DELETE FROM news_archive WHERE published_at < (CURRENT_TIMESTAMP - INTERVAL '30 days')", function(err) {
+            db.run("DELETE FROM news_archive WHERE published_at < NOW() - INTERVAL '30 days'", function(err) {
                 if (err) {
                     console.error('❌ Cleanup error:', err);
                     reject(err);

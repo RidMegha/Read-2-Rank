@@ -158,7 +158,7 @@ module.exports = {
                 } else {
                     // Mimic SQLite's this.lastID and this.changes
                     const context = {
-                        lastID: result.rows[0]?.id || null,
+                        lastID: result.rows && result.rows.length > 0 ? result.rows[0].id : null,
                         changes: result.rowCount || 0
                     };
                     callback.call(context, null);
