@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { Bookmark, BookmarkCheck, Share2, Download, Printer, Sparkles, Calendar, TrendingUp } from 'lucide-react';
 import jsPDF from 'jspdf';
@@ -12,19 +13,19 @@ const TodaysGK = () => {
 
     useEffect(() => {
         const fetchGK = async () => {
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             try {
-                const res = await axios.get('http://localhost:5000/api/gk/today', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await axios.get('/api/gk/today', 
+                //    { headers: { Authorization: `Bearer ${token}` }}
+                );
                 setGkPoints(res.data);
 
                 // ✅ Log GK View Activity
-                if (user && token) {
+                if (user ) {
                     await axios.post(
-                        'http://localhost:5000/api/activity',
+                        '/api/activity',
                         { type: 'GK_VIEW' },
-                        { headers: { Authorization: `Bearer ${token}` } }
+                        // { headers: { Authorization: `Bearer ${token}` } }
                     ).catch(err => console.error('Activity log failed:', err));
                 }
             } catch (error) {
@@ -38,25 +39,25 @@ const TodaysGK = () => {
     }, [user]);
 
     const toggleBookmark = async (id, isBookmarked) => {
-        const token = localStorage.getItem('token');
+        // const token = localStorage.getItem('token');
 
         try {
             if (isBookmarked) {
-                await axios.delete(`http://localhost:5000/api/gk/bookmark/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                await axios.delete(`/api/gk/bookmark/${id}`, 
+                //    {headers: { Authorization: `Bearer ${token}` }}
+                );
             } else {
                 await axios.post(
-                    'http://localhost:5000/api/gk/bookmark',
+                    '/api/gk/bookmark',
                     { gk_id: id },
-                    { headers: { Authorization: `Bearer ${token}` } }
+                    // { headers: { Authorization: `Bearer ${token}` } }
                 );
 
                 // ✅ Log Bookmark Activity
                 await axios.post(
-                    'http://localhost:5000/api/activity',
+                    '/api/activity',
                     { type: 'BOOKMARK', gk_id: id },
-                    { headers: { Authorization: `Bearer ${token}` } }
+                    // { headers: { Authorization: `Bearer ${token}` } }
                 ).catch(err => console.error('Activity log failed:', err));
             }
 

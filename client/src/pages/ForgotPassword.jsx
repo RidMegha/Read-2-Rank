@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-// import axios from '../api/axios';
+// import axios from 'axios';
+import axios from '../api/axios';
 
-const API = import.meta.env.VITE_API_BASE_URL;
+// const API = import.meta.env.VITE_API_BASE_URL;
 
 
 const ForgotPassword = () => {
@@ -35,7 +35,7 @@ const ForgotPassword = () => {
     try {
         // ✅ MUST await and store response
         const response = await axios.post(
-            `${API}/api/auth/forgot-password`,
+            `/api/auth/forgot-password`,
             { email }
         );
 

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Save, Edit2, X, Briefcase, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+// import axios from 'axios';
+
+import axios from '../api/axios';
 
 const Profile = () => {
     const { user } = useAuth();
@@ -23,11 +25,15 @@ const Profile = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            await axios.put('http://localhost:5000/api/auth/profile', 
-                { name: formData.name, exam_type: formData.exam_type },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            // const token = localStorage.getItem('token');
+            // await axios.put('/api/auth/profile', 
+            //     { name: formData.name, exam_type: formData.exam_type },
+            //     { headers: { Authorization: `Bearer ${token}` } }
+            // );
+            await axios.put('/api/auth/profile', {
+            name: formData.name,
+            exam_type: formData.exam_type
+            });
             
             setMessage({ text: 'Profile updated successfully!', type: 'success' });
             setIsEditing(false);

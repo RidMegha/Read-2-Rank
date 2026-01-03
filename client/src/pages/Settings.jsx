@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Save, ShieldCheck, Loader2, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axios';
 
 const Settings = () => {
     const { user } = useAuth();
@@ -41,10 +42,10 @@ const Settings = () => {
         
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            await axios.put('http://localhost:5000/api/auth/password', 
+            // const token = localStorage.getItem('token');
+            await axios.put('/api/auth/password', 
                 { currentPassword: passData.currentPassword, newPassword: passData.newPassword },
-                { headers: { Authorization: `Bearer ${token}` } }
+                // { headers: { Authorization: `Bearer ${token}` } }
             );
             setMessage({ text: 'Password updated successfully!', type: 'success' });
             setPassData({ currentPassword: '', newPassword: '', confirmPassword: '' });

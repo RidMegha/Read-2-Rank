@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
+// import axios from 'axios';
 import { 
   ChevronLeft, ChevronRight, FileText, Download, Printer, Calendar, 
   Sparkles, TrendingUp, Bookmark, BookmarkCheck 
@@ -23,27 +24,27 @@ const RevisionHub = () => {
 
     useEffect(() => {
         const fetchGK = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) return;
+            // const token = localStorage.getItem('token');
+            // if (!token) return;
             
             setLoading(true);
             try {
                 let url;
                 if (activeTab === 'daily') {
                     const dateStr = formatDate(selectedDate);
-                    url = `http://localhost:5000/api/gk/date/${dateStr}`;
+                    url = `/api/gk/date/${dateStr}`;
                 } else if (activeTab === 'monthly') {
                     const year = currentMonth.getFullYear();
                     const month = currentMonth.getMonth() + 1;
-                    url = `http://localhost:5000/api/gk/month/${year}/${month}`;
+                    url = `/api/gk/month/${year}/${month}`;
                 } else if (activeTab === 'yearly') {
-                    url = `http://localhost:5000/api/gk/yearly/${selectedYear}`;
+                    url = `/api/gk/yearly/${selectedYear}`;
                 }
 
                 if (url) {
-                    const res = await axios.get(url, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const res = await axios.get(url, 
+                        //{ headers: { Authorization: `Bearer ${token}` }}
+                    );
                     setGkData(res.data);
                 }
             } catch (error) {
@@ -176,19 +177,19 @@ const RevisionHub = () => {
     };
 
     const toggleBookmark = async (id, isBookmarked) => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    // const token = localStorage.getItem('token');
+    // if (!token) return;
 
     try {
         if (isBookmarked) {
-            await axios.delete(`http://localhost:5000/api/gk/bookmark/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await axios.delete(`/api/gk/bookmark/${id}`, 
+                //{ headers: { Authorization: `Bearer ${token}` }}
+            );
         } else {
             await axios.post(
-                `http://localhost:5000/api/gk/bookmark`,
+                `/api/gk/bookmark`,
                 { gk_id: id },
-                { headers: { Authorization: `Bearer ${token}` } }
+                // { headers: { Authorization: `Bearer ${token}` } }
             );
         }
 

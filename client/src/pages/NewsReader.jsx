@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axios';
+
 import DOMPurify from 'dompurify';
 import { ArrowLeft, ExternalLink, Clock, Calendar, ChevronUp, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
@@ -52,8 +54,8 @@ const NewsReader = () => {
 
         console.log('🔍 Starting fetch for:', url);
         
-        const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
-       const response = await axios.get(`${API_BASE}/api/news/fetch-content`, {
+        // const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+       const response = await axios.get(`/api/news/fetch-content`, {
           params: { url },
           timeout: 30000, // 30 seconds
           signal: controller.signal,

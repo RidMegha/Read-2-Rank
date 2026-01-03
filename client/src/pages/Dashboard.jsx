@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axios';
+
 import { useAuth } from '../context/AuthContext';
 import { Award, Bookmark, TrendingUp, Calendar, Zap, Activity, Trash2, BookmarkCheck } from 'lucide-react';
 
-const API = 'http://localhost:5000';
+// const API = 'http://localhost:5000';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -29,10 +31,10 @@ const Dashboard = () => {
         const fetchDashboard = async () => {
             try {
                 const [statsRes, bookmarksRes] = await Promise.all([
-                    axios.get(`${API}/api/dashboard/summary`, {
+                    axios.get(`/api/dashboard/summary`, {
                         headers: { Authorization: `Bearer ${token}` }
                     }),
-                    axios.get(`${API}/api/gk/bookmarks`, {
+                    axios.get(`/api/gk/bookmarks`, {
                         headers: { Authorization: `Bearer ${token}` }
                     })
                 ]);
@@ -52,7 +54,7 @@ const Dashboard = () => {
     const removeBookmark = async (id) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`${API}/api/gk/bookmark/${id}`, {
+            await axios.delete(`/api/gk/bookmark/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setBookmarks(prev => prev.filter(b => b.id !== id));

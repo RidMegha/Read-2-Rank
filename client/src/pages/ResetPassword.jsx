@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, Loader2, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-// import axios from '../api/axios';
+// import axios from 'axios';
+import axios from '../api/axios';
 
 
-const API = import.meta.env.VITE_API_BASE_URL;
+// const API = import.meta.env.VITE_API_BASE_URL;
 
 const ResetPassword = () => {
     const [searchParams] = useSearchParams();
@@ -32,7 +32,7 @@ const ResetPassword = () => {
         // Verify token
         // axios.get(`/api/auth/verify-reset-token/${token}`)
         // axios.get(`http://localhost:5000/api/auth/verify-reset-token/${token}`)
-        axios.get(`${API}/api/auth/verify-reset-token/${token}`)
+        axios.get(`/api/auth/verify-reset-token/${token}`)
             .then(() => {
                 setTokenValid(true);
                 setVerifying(false);
@@ -60,7 +60,7 @@ const ResetPassword = () => {
         setLoading(true);
 
         try {
-            await axios.post(`${API}/api/auth/reset-password`, {
+            await axios.post(`/api/auth/reset-password`, {
                 token,
                 newPassword
             });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
- import axios from 'axios';
-// import axios from '../api/axios';
+//  import axios from 'axios';
+import axios from '../api/axios';
 
 import { Calendar, ExternalLink, Archive as ArchiveIcon, Clock, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,7 +14,7 @@ const Archive = () => {
     useEffect(() => {
         const fetchArchive = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/news/archive');
+                const res = await axios.get('/api/news/archive');
                 setNews(res.data);
             } catch (error) {
                 console.error("Error fetching archive", error);
