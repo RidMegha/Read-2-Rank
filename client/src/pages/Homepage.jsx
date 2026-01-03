@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { Calendar, Newspaper, ExternalLink, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -15,10 +16,10 @@ const Homepage = () => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const indianRes = await axios.get('http://localhost:5000/api/news/indian');
+                const indianRes = await axios.get('/api/news/indian');
                 setNews(indianRes.data.articles);
                 
-                const globalRes = await axios.get('http://localhost:5000/api/news/global');
+                const globalRes = await axios.get('/api/news/global');
                 setGlobalNews(globalRes.data.articles);
             } catch (error) {
                 console.error("Error fetching news", error);
