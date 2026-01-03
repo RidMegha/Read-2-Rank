@@ -1,5 +1,13 @@
 const { Pool } = require('pg');
 
+// Check if DATABASE_URL is defined
+if (!process.env.DATABASE_URL) {
+    console.error('❌ CRITICAL ERROR: DATABASE_URL environment variable is not set!');
+    console.error('Please add DATABASE_URL to your Render environment variables.');
+    console.error('Example: postgresql://postgres:password@host:5432/database');
+    process.exit(1);
+}
+
 // Use DATABASE_URL from environment variable
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -10,6 +18,7 @@ const pool = new Pool({
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.error('❌ Database connection error:', err);
+        console.error('Make sure your DATABASE_URL is correct.');
         process.exit(1);
     } else {
         console.log('✅ Connected to PostgreSQL database at:', new Date(res.rows[0].now).toLocaleString());
