@@ -562,12 +562,24 @@ app.get('/api/news/global', async (req, res) => {
 });
 
 app.get('/api/news/archive', async (req, res) => {
-    db.all('SELECT * FROM news_archive ORDER BY published_at DESC', (err, rows) => {
-        if (err) return res.status(500).json({ message: 'Database error' });
+    db.all('SELECT * FROM news_archive ORDER BY published_at DESC', [], (err, rows) => {
+        if (err) {
+            console.error('Archive fetch error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        // Safety check for rows
+        if (!rows || !Array.isArray(rows)) {
+            console.warn('No rows returned from database');
+            return res.json([]);
+        }
+        
         console.log(`📰 Total articles in database: ${rows.length}`);
+        
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         thirtyDaysAgo.setHours(0, 0, 0, 0);
+        
         const recentNews = rows.filter(article => {
             if (!article.published_at) return false;
             const publishedDate = new Date(article.published_at);
@@ -575,17 +587,22 @@ app.get('/api/news/archive', async (req, res) => {
             const isRecent = publishedDate >= thirtyDaysAgo;
             return isValid && isRecent;
         });
+        
         console.log(`📅 Articles from last 30 days: ${recentNews.length}`);
+        
         const indian = recentNews.filter(r => r.category === 'Indian');
         const global = recentNews.filter(r => r.category === 'Global');
         const general = recentNews.filter(r => r.category === 'General' || !r.category);
+        
         console.log(`📊 Archive breakdown - Indian: ${indian.length}, Global: ${global.length}, General: ${general.length}`);
+        
         const maxPerCategory = 1000;
         const balanced = [
             ...indian.slice(0, maxPerCategory),
             ...global.slice(0, maxPerCategory),
             ...general.slice(0, 20)
         ].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+        
         console.log(`✅ Returning ${balanced.length} balanced articles to frontend`);
         return res.json(balanced);
     });
