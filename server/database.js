@@ -11,7 +11,9 @@ if (!process.env.DATABASE_URL) {
 // Use DATABASE_URL from environment variable
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 30000
 });
 
 // Test connection
