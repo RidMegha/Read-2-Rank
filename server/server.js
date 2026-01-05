@@ -814,51 +814,163 @@ app.get('/api/gk/month/:year/:month', verifyToken, (req, res) => {
     const paddedMonth = month.padStart(2, '0');
     const datePattern = year + '-' + paddedMonth + '-%';
     console.log(`📅 Monthly request: Year=${year}, Month=${paddedMonth}, Pattern=${datePattern}`);
+    
     db.all('SELECT * FROM gk_points WHERE date LIKE $1 ORDER BY date DESC', [datePattern], (err, rows) => {
-        if (err) return res.status(500).json({ message: 'Database error' });
+        if (err) {
+            console.error('Monthly fetch error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        console.log(`📊 DB entries for ${paddedMonth}: ${rows.length}`);
+        
         if (year === '2025') {
             const mockData = getMockMonthlyData2025(paddedMonth);
-            console.log(`📊 Mock data entries: ${mockData.length}, DB entries: ${rows.length}`);
+            console.log(`📊 Mock data entries for ${paddedMonth}: ${mockData.length}`);
+            
             if (paddedMonth === '12') {
+                // Special handling for December - combine daily and monthly mock data
                 const decemberDailyData = getMockDailyDataDecember2025();
                 const allDecemberMock = Object.values(decemberDailyData).flat();
-                const combined = [...allDecemberMock, ...rows];
-                const uniqueMap = {};
-                combined.forEach(item => {
-                    if (!uniqueMap[item.date]) {
-                        uniqueMap[item.date] = [];
-                    }
-                    uniqueMap[item.date].push(item);
-                });
-                const unique = Object.values(uniqueMap).flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Add unique IDs to mock data
+                const mockWithIds = allDecemberMock.map((item, index) => ({
+                    ...item,
+                    id: `mock_dec_daily_${index}`,
+                    source_url: null,
+                    isFromMock: true
+                }));
+                
+                const combined = [...mockWithIds, ...rows];
+                const unique = combined.filter((item, index, self) => 
+                    index === self.findIndex(t => 
+                        (t.id === item.id || (t.date === item.date && t.content === item.content))
+                    )
+                ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                
                 console.log(`✅ December combined: ${unique.length} total entries`);
-                return attachBookmarksAndSend(unique, req.userId, res);
+                
+                // Attach bookmarks only to non-mock items
+                db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                    if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                    const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                    const result = unique.map(item => ({
+                        ...item,
+                        isBookmarked: item.isFromMock ? false : bookmarkedIds.includes(item.id)
+                    }));
+                    return res.json(result);
+                });
+                return;
             }
-            if (rows.length > 0) {
-                console.log(`✅ Returning ${rows.length} DB entries for ${paddedMonth}`);
-                return attachBookmarksAndSend(rows, req.userId, res);
+            
+            // For other months in 2025
+            if (mockData.length > 0) {
+                // Add unique IDs to mock data
+                const mockWithIds = mockData.map((item, index) => ({
+                    ...item,
+                    id: `mock_${paddedMonth}_${index}`,
+                    source_url: null,
+                    isFromMock: true
+                }));
+                
+                console.log(`✅ Returning ${mockWithIds.length} mock entries for month ${paddedMonth}`);
+                
+                // Combine mock data with any real data
+                const combined = [...mockWithIds, ...rows];
+                const unique = combined.filter((item, index, self) => 
+                    index === self.findIndex(t => 
+                        (t.id === item.id || (t.date === item.date && t.content === item.content))
+                    )
+                ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Attach bookmarks only to non-mock items
+                db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                    if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                    const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                    const result = unique.map(item => ({
+                        ...item,
+                        isBookmarked: item.isFromMock ? false : bookmarkedIds.includes(item.id)
+                    }));
+                    return res.json(result);
+                });
+                return;
             }
-            console.log(`✅ Returning ${mockData.length} mock entries for ${paddedMonth}`);
-            return res.json(mockData);
         }
-        console.log(`✅ Returning ${rows.length} entries for year ${year}`);
-        return attachBookmarksAndSend(rows, req.userId, res);
+        
+        // For non-2025 years or no mock data
+        if (rows.length > 0) {
+            console.log(`✅ Returning ${rows.length} DB entries for ${paddedMonth}`);
+            db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                const result = rows.map(item => ({ ...item, isBookmarked: bookmarkedIds.includes(item.id) }));
+                return res.json(result);
+            });
+        } else {
+            console.log(`⚠️ No data found for ${year}-${paddedMonth}`);
+            return res.json([]);
+        }
     });
 });
 
 app.get('/api/gk/yearly/:year', verifyToken, (req, res) => {
     const { year } = req.params;
     const datePattern = year + '-%';
+    console.log(`📅 Yearly request: Year=${year}, Pattern=${datePattern}`);
+    
     db.all('SELECT * FROM gk_points WHERE date LIKE $1 ORDER BY date DESC', [datePattern], (err, rows) => {
-        if (err) return res.status(500).json({ message: 'Database error' });
-        if (rows.length > 0) {
-            return attachBookmarksAndSend(rows, req.userId, res);
+        if (err) {
+            console.error('Yearly fetch error:', err);
+            return res.status(500).json({ message: 'Database error' });
         }
+        
         const mockData = getMockYearlyData(year);
+        console.log(`📊 Mock data entries for ${year}: ${mockData.length}, DB entries: ${rows.length}`);
+        
         if (mockData.length > 0) {
-            return attachBookmarksAndSend(mockData, req.userId, res);
+            // Add unique IDs to mock data
+            const mockWithIds = mockData.map((item, index) => ({
+                ...item,
+                id: `mock_year_${year}_${index}`,
+                source_url: null,
+                isFromMock: true
+            }));
+            
+            // Combine mock data with database data
+            const combined = [...mockWithIds, ...rows];
+            const unique = combined.filter((item, index, self) => 
+                index === self.findIndex(t => 
+                    (t.id === item.id || (t.date === item.date && t.content === item.content))
+                )
+            ).sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            console.log(`✅ Returning ${unique.length} combined entries for year ${year}`);
+            
+            // Attach bookmarks only to non-mock items
+            db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                const result = unique.map(item => ({
+                    ...item,
+                    isBookmarked: item.isFromMock ? false : bookmarkedIds.includes(item.id)
+                }));
+                return res.json(result);
+            });
+            return;
         }
-        return res.json([]);
+        
+        // If no mock data, return DB data
+        if (rows.length > 0) {
+            console.log(`✅ Returning ${rows.length} DB entries for year ${year}`);
+            db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                const result = rows.map(item => ({ ...item, isBookmarked: bookmarkedIds.includes(item.id) }));
+                return res.json(result);
+            });
+        } else {
+            console.log(`⚠️ No data found for year ${year}`);
+            return res.json([]);
+        }
     });
 });
 

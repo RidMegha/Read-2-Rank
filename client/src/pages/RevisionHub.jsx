@@ -450,30 +450,30 @@ const RevisionHub = () => {
 
                                                  
                                     {/* Bookmark / Lock */}
-                                        {Number.isInteger(point.id) ? (
-                                            <button
-                                                onClick={() => toggleBookmark(point.id, point.isBookmarked)}
-                                                className={`p-2 rounded-full transition ${
-                                                    point.isBookmarked
-                                                        ? 'text-blue-600'
-                                                        : 'text-gray-400 hover:text-blue-500'
-                                                }`}
-                                                title="Bookmark GK"
-                                            >
-                                                {point.isBookmarked ? (
-                                                    <BookmarkCheck size={18} />
-                                                ) : (
-                                                    <Bookmark size={18} />
-                                                )}
-                                            </button>
-                                        ) : (
-                                            <span
-                                                className="p-2 text-gray-300 cursor-not-allowed"
-                                                title="Bookmark available only for saved GK"
-                                            >
-                                                🔒
-                                            </span>
-                                        )}
+                                    {Number.isInteger(point.id) ? (
+                                        <button
+                                            onClick={() => toggleBookmark(point.id, point.isBookmarked)}
+                                            className={`p-2 rounded-full transition ${
+                                                point.isBookmarked
+                                                    ? 'text-blue-600'
+                                                    : 'text-gray-400 hover:text-blue-500'
+                                            }`}
+                                            title="Bookmark GK"
+                                        >
+                                            {point.isBookmarked ? (
+                                                <BookmarkCheck size={18} />
+                                            ) : (
+                                                <Bookmark size={18} />
+                                            )}
+                                        </button>
+                                    ) : (
+                                        <span
+                                            className="p-2 text-gray-300 cursor-not-allowed"
+                                            title="Bookmark available only for saved GK"
+                                        >
+                                            🔒
+                                        </span>
+                                    )}
 
 
 
