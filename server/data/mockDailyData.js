@@ -205,4 +205,4 @@ const getMockDailyDataDecember2025 = (specificDate = null) => {
     return Object.values(dailyData).flat();
 };
 
-module.exports = getMockDailyDataDecember2025;
+module.exports = {getMockDailyDataDecember2025};

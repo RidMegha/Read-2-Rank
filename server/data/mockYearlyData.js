@@ -169,4 +169,4 @@ const mockYearlyData = {
     ]
 };
 
-module.exports = mockYearlyData;
+module.exports = {mockYearlyData};

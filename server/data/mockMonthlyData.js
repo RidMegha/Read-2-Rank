@@ -141,4 +141,4 @@ const mockMonthlyData = {
 ]
 };
 
-module.exports = mockMonthlyData;
+module.exports = {mockMonthlyData};
