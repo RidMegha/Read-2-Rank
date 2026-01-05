@@ -809,6 +809,8 @@ app.get('/api/gk/date/:date', verifyToken, (req, res) => {
     });
 });
 
+// Replace your existing /api/gk/month/:year/:month route with this:
+
 app.get('/api/gk/month/:year/:month', verifyToken, (req, res) => {
     const { year, month } = req.params;
     const paddedMonth = month.padStart(2, '0');
@@ -824,63 +826,42 @@ app.get('/api/gk/month/:year/:month', verifyToken, (req, res) => {
         console.log(`📊 DB entries for ${paddedMonth}: ${rows.length}`);
         
         if (year === '2025') {
-            const mockData = getMockMonthlyData2025(paddedMonth);
-            console.log(`📊 Mock data entries for ${paddedMonth}: ${mockData.length}`);
+            let mockData = [];
             
             if (paddedMonth === '12') {
-                // Special handling for December - combine daily and monthly mock data
+                // Special handling for December - get all daily data
                 const decemberDailyData = getMockDailyDataDecember2025();
-                const allDecemberMock = Object.values(decemberDailyData).flat();
-                
-                // Add unique IDs to mock data
-                const mockWithIds = allDecemberMock.map((item, index) => ({
-                    ...item,
-                    id: `mock_dec_daily_${index}`,
-                    source_url: null,
-                    isFromMock: true
-                }));
-                
-                const combined = [...mockWithIds, ...rows];
-                const unique = combined.filter((item, index, self) => 
-                    index === self.findIndex(t => 
-                        (t.id === item.id || (t.date === item.date && t.content === item.content))
-                    )
-                ).sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                console.log(`✅ December combined: ${unique.length} total entries`);
-                
-                // Attach bookmarks only to non-mock items
-                db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
-                    if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
-                    const bookmarkedIds = bookmarks.map(b => b.gk_id);
-                    const result = unique.map(item => ({
-                        ...item,
-                        isBookmarked: item.isFromMock ? false : bookmarkedIds.includes(item.id)
-                    }));
-                    return res.json(result);
-                });
-                return;
+                // Convert the object of arrays into a single flat array
+                mockData = Object.values(decemberDailyData).flat();
+                console.log(`📊 December daily mock data: ${mockData.length} entries`);
+            } else {
+                // For other months, use monthly data
+                mockData = getMockMonthlyData2025(paddedMonth);
+                console.log(`📊 Monthly mock data for ${paddedMonth}: ${mockData.length} entries`);
             }
             
-            // For other months in 2025
             if (mockData.length > 0) {
-                // Add unique IDs to mock data
+                // Add unique IDs to mock data to prevent conflicts
                 const mockWithIds = mockData.map((item, index) => ({
                     ...item,
-                    id: `mock_${paddedMonth}_${index}`,
+                    id: `mock_${year}_${paddedMonth}_${index}`,
                     source_url: null,
                     isFromMock: true
                 }));
                 
-                console.log(`✅ Returning ${mockWithIds.length} mock entries for month ${paddedMonth}`);
+                console.log(`✅ Prepared ${mockWithIds.length} mock entries for month ${paddedMonth}`);
                 
-                // Combine mock data with any real data
+                // Combine mock data with database data
                 const combined = [...mockWithIds, ...rows];
+                
+                // Remove duplicates based on date and content
                 const unique = combined.filter((item, index, self) => 
                     index === self.findIndex(t => 
-                        (t.id === item.id || (t.date === item.date && t.content === item.content))
+                        t.date === item.date && t.content === item.content
                     )
                 ).sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                console.log(`✅ Returning ${unique.length} combined entries (${mockWithIds.length} mock + ${rows.length} DB)`);
                 
                 // Attach bookmarks only to non-mock items
                 db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
@@ -912,6 +893,8 @@ app.get('/api/gk/month/:year/:month', verifyToken, (req, res) => {
     });
 });
 
+// Replace your existing /api/gk/yearly/:year route with this:
+
 app.get('/api/gk/yearly/:year', verifyToken, (req, res) => {
     const { year } = req.params;
     const datePattern = year + '-%';
@@ -923,8 +906,10 @@ app.get('/api/gk/yearly/:year', verifyToken, (req, res) => {
             return res.status(500).json({ message: 'Database error' });
         }
         
-        const mockData = getMockYearlyData(year);
-        console.log(`📊 Mock data entries for ${year}: ${mockData.length}, DB entries: ${rows.length}`);
+        console.log(`📊 DB entries for year ${year}: ${rows.length}`);
+        
+        let mockData = getMockYearlyData(year);
+        console.log(`📊 Mock data entries for ${year}: ${mockData.length}`);
         
         if (mockData.length > 0) {
             // Add unique IDs to mock data
@@ -935,15 +920,19 @@ app.get('/api/gk/yearly/:year', verifyToken, (req, res) => {
                 isFromMock: true
             }));
             
+            console.log(`✅ Prepared ${mockWithIds.length} mock entries for year ${year}`);
+            
             // Combine mock data with database data
             const combined = [...mockWithIds, ...rows];
+            
+            // Remove duplicates based on date and content
             const unique = combined.filter((item, index, self) => 
                 index === self.findIndex(t => 
-                    (t.id === item.id || (t.date === item.date && t.content === item.content))
+                    t.date === item.date && t.content === item.content
                 )
             ).sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            console.log(`✅ Returning ${unique.length} combined entries for year ${year}`);
+            console.log(`✅ Returning ${unique.length} combined entries for year ${year} (${mockWithIds.length} mock + ${rows.length} DB)`);
             
             // Attach bookmarks only to non-mock items
             db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {

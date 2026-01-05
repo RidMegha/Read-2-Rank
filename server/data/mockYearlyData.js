@@ -1,4 +1,71 @@
 const mockYearlyData = {
+    '2025': [
+
+        // JANUARY 2025 (REAL + VERIFIED)
+        { date: '2025-01-01', category: 'International', priority: 'High', content: 'Truck attack in New Orleans, USA, during New Year celebrations; terrorism-related investigation confirmed.' },
+        { date: '2025-01-12', category: 'National', priority: 'High', content: 'National Youth Day observed on the birth anniversary of Swami Vivekananda.' },
+        { date: '2025-01-20', category: 'International', priority: 'High', content: 'Donald Trump sworn in as the 47th President of the United States.' },
+        { date: '2025-01-26', category: 'National', priority: 'High', content: 'India celebrated its 76th Republic Day; President of Indonesia Prabowo Subianto was the Chief Guest.' },
+
+        // FEBRUARY 2025 (VERIFIED OBSERVANCES)
+        { date: '2025-02-01', category: 'Economy', priority: 'High', content: 'Union Budget 2025–26 presented in Parliament of India.' },
+        { date: '2025-02-04', category: 'Health', priority: 'High', content: 'World Cancer Day observed globally.' },
+        { date: '2025-02-11', category: 'Science', priority: 'Medium', content: 'International Day of Women and Girls in Science observed.' },
+        { date: '2025-02-28', category: 'Science', priority: 'High', content: 'National Science Day observed in India.' },
+
+        // MARCH 2025
+        { date: '2025-03-08', category: 'Social', priority: 'High', content: 'International Women’s Day observed worldwide.' },
+        { date: '2025-03-15', category: 'Consumer', priority: 'Medium', content: 'World Consumer Rights Day observed globally.' },
+        { date: '2025-03-22', category: 'Environment', priority: 'High', content: 'World Water Day observed globally.' },
+
+        // APRIL 2025
+        { date: '2025-04-07', category: 'Health', priority: 'High', content: 'World Health Day observed globally.' },
+        { date: '2025-04-14', category: 'National', priority: 'High', content: 'Dr. B. R. Ambedkar Jayanti observed in India.' },
+        { date: '2025-04-22', category: 'Environment', priority: 'High', content: 'Earth Day observed worldwide.' },
+
+        // MAY 2025
+        { date: '2025-05-01', category: 'Labor', priority: 'High', content: 'International Labour Day observed globally.' },
+        { date: '2025-05-03', category: 'Press', priority: 'Medium', content: 'World Press Freedom Day observed.' },
+        { date: '2025-05-11', category: 'Science', priority: 'High', content: 'National Technology Day observed in India.' },
+        { date: '2025-05-31', category: 'Health', priority: 'High', content: 'World No Tobacco Day observed globally.' },
+
+        // JUNE 2025
+        { date: '2025-06-05', category: 'Environment', priority: 'High', content: 'World Environment Day observed globally.' },
+        { date: '2025-06-08', category: 'Environment', priority: 'Medium', content: 'World Oceans Day observed.' },
+        { date: '2025-06-21', category: 'Culture', priority: 'High', content: 'International Yoga Day celebrated worldwide.' },
+
+        // JULY 2025
+        { date: '2025-07-01', category: 'Economy', priority: 'High', content: 'GST Day observed in India.' },
+        { date: '2025-07-11', category: 'Population', priority: 'Medium', content: 'World Population Day observed globally.' },
+        { date: '2025-07-26', category: 'Defense', priority: 'High', content: 'Kargil Vijay Diwas observed in India.' },
+
+        // AUGUST 2025
+        { date: '2025-08-09', category: 'History', priority: 'High', content: 'Quit India Movement anniversary observed in India.' },
+        { date: '2025-08-12', category: 'Youth', priority: 'Medium', content: 'International Youth Day observed.' },
+        { date: '2025-08-15', category: 'National', priority: 'High', content: 'India celebrated its 79th Independence Day.' },
+        { date: '2025-08-29', category: 'Sports', priority: 'Medium', content: 'National Sports Day observed on the birth anniversary of Major Dhyan Chand.' },
+
+        // SEPTEMBER 2025
+        { date: '2025-09-05', category: 'Education', priority: 'High', content: 'Teachers’ Day observed in India.' },
+        { date: '2025-09-08', category: 'Education', priority: 'Medium', content: 'International Literacy Day observed.' },
+        { date: '2025-09-14', category: 'Culture', priority: 'High', content: 'Hindi Diwas observed in India.' },
+        { date: '2025-09-27', category: 'Tourism', priority: 'Medium', content: 'World Tourism Day observed globally.' },
+
+        // OCTOBER 2025
+        { date: '2025-10-02', category: 'National', priority: 'High', content: 'Gandhi Jayanti observed in India.' },
+        { date: '2025-10-16', category: 'Food', priority: 'Medium', content: 'World Food Day observed globally.' },
+
+        // NOVEMBER 2025
+        { date: '2025-11-11', category: 'Education', priority: 'Medium', content: 'National Education Day observed in India.' },
+        { date: '2025-11-14', category: 'Children', priority: 'High', content: 'Children’s Day observed in India.' },
+        { date: '2025-11-26', category: 'National', priority: 'High', content: 'Constitution Day (Samvidhan Diwas) observed in India.' },
+
+        // DECEMBER 2025
+        { date: '2025-12-01', category: 'Health', priority: 'Medium', content: 'World AIDS Day observed globally.' },
+        { date: '2025-12-10', category: 'Rights', priority: 'High', content: 'Human Rights Day observed worldwide.' },
+        { date: '2025-12-25', category: 'National', priority: 'High', content: 'Good Governance Day observed in India.' }
+     ],
+
     '2024': [
         { date: '2024-01-22', category: 'Culture', priority: 'High', content: 'Ram Mandir Pran Pratishtha ceremony held in Ayodhya, presided over by PM Narendra Modi.' },
         { date: '2024-02-01', category: 'Economy', priority: 'High', content: 'Interim Budget 2024-25 presented by Finance Minister Nirmala Sitharaman.' },
