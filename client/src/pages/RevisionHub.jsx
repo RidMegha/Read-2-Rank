@@ -450,30 +450,34 @@ const RevisionHub = () => {
 
                                                  
                                     {/* Bookmark / Lock */}
-                                    {Number.isInteger(point.id) ? (
-                                        <button
-                                            onClick={() => toggleBookmark(point.id, point.isBookmarked)}
-                                            className={`p-2 rounded-full transition ${
-                                                point.isBookmarked
-                                                    ? 'text-blue-600'
-                                                    : 'text-gray-400 hover:text-blue-500'
-                                            }`}
-                                            title="Bookmark GK"
-                                        >
-                                            {point.isBookmarked ? (
-                                                <BookmarkCheck size={18} />
+                                   {/* Bookmark / Lock */}
+                                            {!point.isFromMock && typeof point.id === 'number' ? (
+                                                <button
+                                                    onClick={() => toggleBookmark(point.id, point.isBookmarked)}
+                                                    className={`p-3 rounded-xl transition-all duration-300 transform hover:scale-110 ${
+                                                        point.isBookmarked
+                                                            ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/50'
+                                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gradient-to-r hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md'
+                                                    }`}
+                                                    title={point.isBookmarked ? "Remove Bookmark" : "Bookmark this GK"}
+                                                >
+                                                    {point.isBookmarked ? (
+                                                        <BookmarkCheck size={20} className="animate-pulse" />
+                                                    ) : (
+                                                        <Bookmark size={20} />
+                                                    )}
+                                                </button>
                                             ) : (
-                                                <Bookmark size={18} />
+                                                <div className="flex flex-col items-center">
+                                                    <span
+                                                        className="p-3 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 rounded-xl cursor-not-allowed border-2 border-dashed border-gray-200 dark:border-gray-700"
+                                                        title="Mock data cannot be bookmarked"
+                                                    >
+                                                        🔒
+                                                    </span>
+                                                    <span className="text-[10px] text-gray-400 dark:text-gray-600 mt-1 font-medium">Mock</span>
+                                                </div>
                                             )}
-                                        </button>
-                                    ) : (
-                                        <span
-                                            className="p-2 text-gray-300 cursor-not-allowed"
-                                            title="Bookmark available only for saved GK"
-                                        >
-                                            🔒
-                                        </span>
-                                    )}
 
 
 

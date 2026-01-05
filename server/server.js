@@ -431,7 +431,7 @@ const fetchGNews = async (url, key) => {
             if (row) {
                 const cacheTime = new Date(row.fetched_at).getTime();
                 const now = new Date().getTime();
-                if (now - cacheTime < 6 * 60 * 60 * 1000) {
+                if (now - cacheTime < 8 * 60 * 60 * 1000) {
                     console.log(`✅ Using cached data for: ${key} (cached ${Math.floor((now - cacheTime) / 60000)} minutes ago)`);
                     const cachedData = JSON.parse(row.data);
                     if (cachedData.articles) {
