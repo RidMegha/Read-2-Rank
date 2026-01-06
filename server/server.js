@@ -11,19 +11,39 @@ const { Readability } = require('@mozilla/readability');
 require('dotenv').config();
 
 const nodemailer = require('nodemailer');
+// ✅ FIXED: Use port 465 for Render compatibility
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,  // ✅ Changed from default (587) to 465
+    secure: true,  // ✅ true for 465
     auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD
-    }
+    },
+    tls: {
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2'
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
 });
 
+// ✅ Enhanced verification with detailed error logging
 transporter.verify((error, success) => {
     if (error) {
         console.error('❌ Gmail SMTP configuration error:', error);
+        console.error('📧 Troubleshooting steps:');
+        console.error('   1. Verify GMAIL_USER is set:', process.env.GMAIL_USER ? '✓' : '✗');
+        console.error('   2. Verify GMAIL_APP_PASSWORD is set:', process.env.GMAIL_APP_PASSWORD ? '✓' : '✗');
+        console.error('   3. Ensure you are using App Password (16 chars), not regular password');
+        console.error('   4. Port 465 should work on Render (current port:', 465, ')');
     } else {
         console.log('✅ Gmail SMTP is ready to send emails');
+        console.log('📧 Configuration:');
+        console.log('   - Host: smtp.gmail.com');
+        console.log('   - Port: 465 (SSL)');
+        console.log('   - User:', process.env.GMAIL_USER);
     }
 });
 
