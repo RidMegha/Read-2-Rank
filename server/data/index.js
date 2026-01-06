@@ -4,10 +4,10 @@
 
 const { mockYearlyData } = require('./mockYearlyData');
 const { mockMonthlyData } = require('./mockMonthlyData');
-const { getMockDailyDataDecember2025 } = require('./mockDailyData');
+const { getMockDailyDataDecember_January } = require('./mockDailyData');
 
 module.exports = {
     mockYearlyData,
     mockMonthlyData,
-    getMockDailyDataDecember2025
+    getMockDailyDataDecember_January
 };

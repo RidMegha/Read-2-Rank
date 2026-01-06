@@ -3,7 +3,7 @@
 // REAL, STATIC & EXAM-SAFE GK ONLY
 // =====================================================
 
-const getMockDailyDataDecember2025 = (specificDate = null) => {
+const getMockDailyDataDecember_January = (specificDate = null) => {
     const dailyData = {
 
         '2025-12-01': [
@@ -195,6 +195,64 @@ const getMockDailyDataDecember2025 = (specificDate = null) => {
             { date: '2025-12-27', category: 'Economy', priority: 'Low', content: 'Year-end economic reviews begin; fiscal performance assessment.' },
             { date: '2025-12-27', category: 'Environment', priority: 'Low', content: 'Winter tourism peaks in hill stations across North India.' },
             { date: '2025-12-27', category: 'Society', priority: 'Low', content: 'Year-end charitable activities and donations increase nationwide.' }
+        ],
+
+        '2025-12-28': [
+            { date: '2025-12-28', category: 'Polity', priority: 'High', content: 'Article 356 of Indian Constitution deals with President\'s Rule in states; can be imposed on recommendation of Governor or otherwise.' },
+            { date: '2025-12-28', category: 'History', priority: 'High', content: 'Indian National Congress founded on December 28, 1885 in Bombay (now Mumbai) by Allan Octavian Hume.' },
+            { date: '2025-12-28', category: 'Economy', priority: 'Medium', content: 'Reserve Bank of India regulates monetary policy through tools like Repo Rate, Reverse Repo Rate, CRR, and SLR.' },
+            { date: '2025-12-28', category: 'Geography', priority: 'Medium', content: 'India shares land borders with 7 countries: Pakistan, Afghanistan, China, Nepal, Bhutan, Myanmar, and Bangladesh.' }
+        ],
+
+        '2025-12-29': [
+            { date: '2025-12-29', category: 'Science', priority: 'High', content: 'Chandrayan-3 successfully landed on Moon\'s South Pole on August 23, 2023, making India fourth country to achieve soft landing.' },
+            { date: '2025-12-29', category: 'Awards', priority: 'High', content: 'Bharat Ratna is India\'s highest civilian award, instituted in 1954; limited to maximum three recipients per year.' },
+            { date: '2025-12-29', category: 'Constitution', priority: 'Medium', content: 'Fundamental Duties were added to Indian Constitution by 42nd Amendment Act, 1976 under Article 51A.' },
+            { date: '2025-12-29', category: 'Environment', priority: 'Medium', content: 'Western Ghats are biodiversity hotspot; recognized as UNESCO World Heritage Site in 2012 across six states.' }
+        ],
+
+        '2025-12-30': [
+            { date: '2025-12-30', category: 'Sports', priority: 'High', content: 'Major Dhyan Chand is known as Hockey Wizard; National Sports Day celebrated on his birth anniversary August 29.' },
+            { date: '2025-12-30', category: 'Economics', priority: 'High', content: 'GST (Goods and Services Tax) implemented from July 1, 2017; replaced multiple indirect taxes with single tax system.' },
+            { date: '2025-12-30', category: 'Defense', priority: 'Medium', content: 'INS Vikrant is India\'s first indigenous aircraft carrier; commissioned in September 2022, built at Cochin Shipyard.' },
+            { date: '2025-12-30', category: 'Books', priority: 'Medium', content: 'Discovery of India written by Jawaharlal Nehru in 1944 during imprisonment at Ahmednagar Fort.' }
+        ],
+
+        '2025-12-31': [
+            { date: '2025-12-31', category: 'History', priority: 'High', content: 'Quit India Movement launched on August 9, 1942 by Mahatma Gandhi with slogan "Do or Die" at Gowalia Tank, Mumbai.' },
+            { date: '2025-12-31', category: 'Geography', priority: 'High', content: 'Standard Meridian of India passes through 82°30\'E longitude passing through Mirzapur, Uttar Pradesh; determines Indian Standard Time.' },
+            { date: '2025-12-31', category: 'Polity', priority: 'Medium', content: 'Supreme Court of India established on January 26, 1950; has 34 judges including Chief Justice; retirement age is 65 years.' },
+            { date: '2025-12-31', category: 'Culture', priority: 'Medium', content: 'UNESCO recognizes 42 World Heritage Sites in India including 34 cultural, 7 natural, and 1 mixed site (as of 2023).' }
+        ],
+
+        // JANUARY 2026
+
+        '2026-01-01': [
+            { date: '2026-01-01', category: 'Polity', priority: 'High', content: 'Preamble of Indian Constitution declares India as Sovereign, Socialist, Secular, Democratic, Republic; Socialist and Secular added by 42nd Amendment.' },
+            { date: '2026-01-01', category: 'Science', priority: 'High', content: 'ISRO\'s Mars Orbiter Mission (Mangalyaan) launched in 2013; India became first Asian nation to reach Mars orbit in first attempt.' },
+            { date: '2026-01-01', category: 'Economy', priority: 'Medium', content: 'NITI Aayog replaced Planning Commission in 2015; serves as think tank and provides directional policy inputs to government.' },
+            { date: '2026-01-01', category: 'Rivers', priority: 'Medium', content: 'Ganga is longest river in India (2525 km); originates from Gangotri Glacier, flows through 5 states before meeting Bay of Bengal.' }
+        ],
+
+        '2026-01-02': [
+            { date: '2026-01-02', category: 'Defense', priority: 'High', content: 'Agni-V is India\'s longest-range ballistic missile with 5000+ km range; can reach targets across Asia including northern China.' },
+            { date: '2026-01-02', category: 'History', priority: 'High', content: 'Battle of Plassey fought on June 23, 1757 between British East India Company and Nawab of Bengal Siraj-ud-Daulah; marked British rule beginning.' },
+            { date: '2026-01-02', category: 'Literature', priority: 'Medium', content: 'Rabindranath Tagore won Nobel Prize in Literature in 1913 for Gitanjali; first non-European to receive Nobel in Literature.' },
+            { date: '2026-01-02', category: 'Climate', priority: 'Medium', content: 'India experiences tropical monsoon climate; southwest monsoon (June-September) contributes 75% of annual rainfall.' }
+        ],
+
+        '2026-01-03': [
+            { date: '2026-01-03', category: 'Constitution', priority: 'High', content: 'Article 370 of Indian Constitution granted special status to Jammu & Kashmir; abrogated on August 5, 2019 by Presidential Order.' },
+            { date: '2026-01-03', category: 'Space', priority: 'High', content: 'Aryabhata was India\'s first satellite launched on April 19, 1975 by Soviet Union; named after ancient mathematician Aryabhata.' },
+            { date: '2026-01-03', category: 'Monuments', priority: 'Medium', content: 'Qutub Minar in Delhi built by Qutub-ud-din Aibak in 1193; tallest brick minaret in world at 72.5 meters height.' },
+            { date: '2026-01-03', category: 'Judiciary', priority: 'Medium', content: 'Public Interest Litigation (PIL) can be filed by any citizen in Supreme Court or High Court for public interest matters.' }
+        ],
+
+        '2026-01-04': [
+            { date: '2026-01-04', category: 'Economics', priority: 'High', content: 'SEBI (Securities and Exchange Board of India) established in 1992; regulates stock exchanges and protects investor interests in securities market.' },
+            { date: '2026-01-04', category: 'Movement', priority: 'High', content: 'Non-Cooperation Movement launched by Gandhi in 1920 after Jallianwala Bagh massacre; aimed at self-governance through non-violent resistance.' },
+            { date: '2026-01-04', category: 'Mountain', priority: 'Medium', content: 'Mount K2 (Godwin-Austen) is second highest peak in world at 8611m; located in Pakistan-occupied Kashmir on India-Pakistan border.' },
+            { date: '2026-01-04', category: 'Sports', priority: 'Medium', content: 'Neeraj Chopra won India\'s first Olympic gold in athletics (Javelin Throw) at Tokyo 2020; also won World Championship gold in 2023.' }
         ]
     };
 
@@ -205,4 +263,4 @@ const getMockDailyDataDecember2025 = (specificDate = null) => {
     return Object.values(dailyData).flat();
 };
 
-module.exports = {getMockDailyDataDecember2025};
+module.exports = {getMockDailyDataDecember_January};

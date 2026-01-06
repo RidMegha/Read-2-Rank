@@ -27,7 +27,7 @@ transporter.verify((error, success) => {
     }
 });
 
-const { mockYearlyData, mockMonthlyData, getMockDailyDataDecember2025 } = require('./data');
+const { mockYearlyData, mockMonthlyData, getMockDailyDataDecember_January } = require('./data');
 
 const app = express();
 
@@ -785,27 +785,81 @@ app.get('/api/gk/bookmarks', verifyToken, (req, res) => {
 
 app.get('/api/gk/date/:date', verifyToken, (req, res) => {
     const { date } = req.params;
+    
     db.all('SELECT * FROM gk_points WHERE date = $1', [date], (err, rows) => {
-        if (err) return res.status(500).json({ message: 'Database error' });
+        if (err) {
+            console.error('Daily fetch error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        
+        const [yearStr, monthStr, dayStr] = date.split('-');
+        const year = Number(yearStr);
+        const month = Number(monthStr);
+        const day = Number(dayStr);
+        
+        // Check if date falls in Dec 2025 or Jan 2026 mock data range
+        const hasMockData = (
+            (year === 2025 && month === 12 && day >= 1 && day <= 31) ||
+            (year === 2026 && month === 1 && day >= 1 && day <= 4)
+        );
+        
+        if (hasMockData) {
+            const mockData = getMockDailyDataDecember_January(date);
+            console.log(`📊 Mock data for ${date}: ${mockData.length} entries`);
+            console.log(`📊 DB data for ${date}: ${rows.length} entries`);
+            
+            // Add IDs to mock data
+            const mockWithIds = mockData.map((item, index) => ({
+                ...item,
+                id: `mock_daily_${date}_${index}`,
+                source_url: null,
+                isFromMock: true
+            }));
+            
+            // Combine API data + Mock data
+            const combined = [...rows, ...mockWithIds];
+            
+            // Remove duplicates based on content
+            const unique = combined.filter((item, index, self) => 
+                index === self.findIndex(t => 
+                    t.content === item.content || 
+                    (t.date === item.date && t.category === item.category && t.priority === item.priority)
+                )
+            ).sort((a, b) => {
+                // Sort: Real data first, then mock data
+                if (a.isFromMock && !b.isFromMock) return 1;
+                if (!a.isFromMock && b.isFromMock) return -1;
+                return 0;
+            });
+            
+            console.log(`✅ Returning ${unique.length} combined entries for ${date} (${rows.length} real + ${mockWithIds.length} mock)`);
+            
+            // Attach bookmarks only for real data
+            db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+                if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
+                const bookmarkedIds = bookmarks.map(b => b.gk_id);
+                const result = unique.map(item => ({
+                    ...item,
+                    isBookmarked: item.isFromMock ? false : bookmarkedIds.includes(item.id)
+                }));
+                return res.json(result);
+            });
+            return;
+        }
+        
+        // For dates outside mock data range
         if (rows.length > 0) {
-            return db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
+            console.log(`✅ Returning ${rows.length} DB entries for ${date}`);
+            db.all('SELECT gk_id FROM bookmarks WHERE user_id = $1', [req.userId], (err, bookmarks) => {
                 if (err) return res.status(500).json({ message: 'Bookmark fetch failed' });
                 const bookmarkedIds = bookmarks.map(b => b.gk_id);
                 const result = rows.map(row => ({ ...row, isBookmarked: bookmarkedIds.includes(row.id) }));
                 return res.json(result);
             });
+        } else {
+            console.log(`⚠️ No data found for ${date}`);
+            return res.json([]);
         }
-        const [yearStr, monthStr, dayStr] = date.split('-');
-        const year = Number(yearStr);
-        const month = Number(monthStr);
-        const day = Number(dayStr);
-        if (year === 2025 && month === 12 && day >= 1 && day <= 27) {
-            const dateData = getMockDailyDataDecember2025(date);
-            console.log(`✅ Returning ${dateData.length} mock entries for ${date}`);
-            return res.json(dateData);
-        }
-        console.log(`⚠️ No data found for ${date}`);
-        return res.json([]);
     });
 });
 
@@ -829,7 +883,7 @@ app.get('/api/gk/month/:year/:month', verifyToken, (req, res) => {
             console.log(`📊 Mock data entries for ${paddedMonth}: ${mockData.length}`);
             
             if (paddedMonth === '12') {
-                const decemberDailyData = getMockDailyDataDecember2025();
+                const decemberDailyData = getMockDailyDataDecember_January();
                 const allDecemberMock = Object.values(decemberDailyData).flat();
                 
                 const mockWithIds = allDecemberMock.map((item, index) => ({

@@ -1,70 +1,76 @@
 const mockYearlyData = {
+    // Replace the '2025' section in mockYearlyData.js with exam-focused static GK
+
     '2025': [
-
-        // JANUARY 2025 (REAL + VERIFIED)
-        { date: '2025-01-01', category: 'International', priority: 'High', content: 'Truck attack in New Orleans, USA, during New Year celebrations; terrorism-related investigation confirmed.' },
-        { date: '2025-01-12', category: 'National', priority: 'High', content: 'National Youth Day observed on the birth anniversary of Swami Vivekananda.' },
-        { date: '2025-01-20', category: 'International', priority: 'High', content: 'Donald Trump sworn in as the 47th President of the United States.' },
-        { date: '2025-01-26', category: 'National', priority: 'High', content: 'India celebrated its 76th Republic Day; President of Indonesia Prabowo Subianto was the Chief Guest.' },
-
-        // FEBRUARY 2025 (VERIFIED OBSERVANCES)
-        { date: '2025-02-01', category: 'Economy', priority: 'High', content: 'Union Budget 2025–26 presented in Parliament of India.' },
-        { date: '2025-02-04', category: 'Health', priority: 'High', content: 'World Cancer Day observed globally.' },
-        { date: '2025-02-11', category: 'Science', priority: 'Medium', content: 'International Day of Women and Girls in Science observed.' },
-        { date: '2025-02-28', category: 'Science', priority: 'High', content: 'National Science Day observed in India.' },
-
-        // MARCH 2025
-        { date: '2025-03-08', category: 'Social', priority: 'High', content: 'International Women’s Day observed worldwide.' },
-        { date: '2025-03-15', category: 'Consumer', priority: 'Medium', content: 'World Consumer Rights Day observed globally.' },
-        { date: '2025-03-22', category: 'Environment', priority: 'High', content: 'World Water Day observed globally.' },
-
-        // APRIL 2025
-        { date: '2025-04-07', category: 'Health', priority: 'High', content: 'World Health Day observed globally.' },
-        { date: '2025-04-14', category: 'National', priority: 'High', content: 'Dr. B. R. Ambedkar Jayanti observed in India.' },
-        { date: '2025-04-22', category: 'Environment', priority: 'High', content: 'Earth Day observed worldwide.' },
-
-        // MAY 2025
-        { date: '2025-05-01', category: 'Labor', priority: 'High', content: 'International Labour Day observed globally.' },
-        { date: '2025-05-03', category: 'Press', priority: 'Medium', content: 'World Press Freedom Day observed.' },
-        { date: '2025-05-11', category: 'Science', priority: 'High', content: 'National Technology Day observed in India.' },
-        { date: '2025-05-31', category: 'Health', priority: 'High', content: 'World No Tobacco Day observed globally.' },
-
-        // JUNE 2025
-        { date: '2025-06-05', category: 'Environment', priority: 'High', content: 'World Environment Day observed globally.' },
-        { date: '2025-06-08', category: 'Environment', priority: 'Medium', content: 'World Oceans Day observed.' },
-        { date: '2025-06-21', category: 'Culture', priority: 'High', content: 'International Yoga Day celebrated worldwide.' },
-
-        // JULY 2025
-        { date: '2025-07-01', category: 'Economy', priority: 'High', content: 'GST Day observed in India.' },
-        { date: '2025-07-11', category: 'Population', priority: 'Medium', content: 'World Population Day observed globally.' },
-        { date: '2025-07-26', category: 'Defense', priority: 'High', content: 'Kargil Vijay Diwas observed in India.' },
-
-        // AUGUST 2025
-        { date: '2025-08-09', category: 'History', priority: 'High', content: 'Quit India Movement anniversary observed in India.' },
-        { date: '2025-08-12', category: 'Youth', priority: 'Medium', content: 'International Youth Day observed.' },
-        { date: '2025-08-15', category: 'National', priority: 'High', content: 'India celebrated its 79th Independence Day.' },
-        { date: '2025-08-29', category: 'Sports', priority: 'Medium', content: 'National Sports Day observed on the birth anniversary of Major Dhyan Chand.' },
-
-        // SEPTEMBER 2025
-        { date: '2025-09-05', category: 'Education', priority: 'High', content: 'Teachers’ Day observed in India.' },
-        { date: '2025-09-08', category: 'Education', priority: 'Medium', content: 'International Literacy Day observed.' },
-        { date: '2025-09-14', category: 'Culture', priority: 'High', content: 'Hindi Diwas observed in India.' },
-        { date: '2025-09-27', category: 'Tourism', priority: 'Medium', content: 'World Tourism Day observed globally.' },
-
-        // OCTOBER 2025
-        { date: '2025-10-02', category: 'National', priority: 'High', content: 'Gandhi Jayanti observed in India.' },
-        { date: '2025-10-16', category: 'Food', priority: 'Medium', content: 'World Food Day observed globally.' },
-
-        // NOVEMBER 2025
-        { date: '2025-11-11', category: 'Education', priority: 'Medium', content: 'National Education Day observed in India.' },
-        { date: '2025-11-14', category: 'Children', priority: 'High', content: 'Children’s Day observed in India.' },
-        { date: '2025-11-26', category: 'National', priority: 'High', content: 'Constitution Day (Samvidhan Diwas) observed in India.' },
-
-        // DECEMBER 2025
-        { date: '2025-12-01', category: 'Health', priority: 'Medium', content: 'World AIDS Day observed globally.' },
-        { date: '2025-12-10', category: 'Rights', priority: 'High', content: 'Human Rights Day observed worldwide.' },
-        { date: '2025-12-25', category: 'National', priority: 'High', content: 'Good Governance Day observed in India.' }
-     ],
+        // ===== POLITY & CONSTITUTION (Essential for ALL exams) =====
+        { date: '2025-01-26', category: 'Constitution', priority: 'High', content: 'Indian Constitution came into force on January 26, 1950; has 448 articles in 25 parts and 12 schedules (originally 395 articles, 22 parts, 8 schedules).' },
+        { date: '2025-01-26', category: 'Polity', priority: 'High', content: 'Dr. B.R. Ambedkar is Chairman of Drafting Committee; Constitution took 2 years, 11 months, 18 days to draft with 165 sittings.' },
+        { date: '2025-02-15', category: 'Polity', priority: 'High', content: 'Fundamental Rights under Part III (Articles 12-35): Right to Equality, Freedom, Against Exploitation, to Freedom of Religion, Cultural & Educational Rights, Constitutional Remedies.' },
+        { date: '2025-02-20', category: 'Constitution', priority: 'High', content: 'Directive Principles of State Policy under Part IV (Articles 36-51); borrowed from Irish Constitution; not justiciable in court.' },
+        { date: '2025-03-10', category: 'Polity', priority: 'High', content: 'President of India elected by Electoral College consisting of elected members of Parliament and State Legislatures; term of 5 years.' },
+        { date: '2025-03-15', category: 'Polity', priority: 'High', content: 'Supreme Court of India established on January 26, 1950; has 34 judges including Chief Justice; retirement age 65 years.' },
+        { date: '2025-04-05', category: 'Constitution', priority: 'High', content: 'Article 356 deals with President\'s Rule in states; Article 360 deals with Financial Emergency; Article 352 deals with National Emergency.' },
+        
+        // ===== HISTORY (Freedom Struggle & Important Events) =====
+        { date: '2025-04-13', category: 'History', priority: 'High', content: 'Jallianwala Bagh massacre occurred on April 13, 1919 in Amritsar; General Dyer ordered firing killing hundreds of unarmed civilians.' },
+        { date: '2025-05-10', category: 'History', priority: 'High', content: 'First War of Independence (Sepoy Mutiny) began on May 10, 1857 at Meerut; Mangal Pandey was first martyr of revolt.' },
+        { date: '2025-06-23', category: 'History', priority: 'High', content: 'Battle of Plassey fought on June 23, 1757 between British East India Company and Siraj-ud-Daulah; marked beginning of British rule.' },
+        { date: '2025-08-08', category: 'History', priority: 'High', content: 'Quit India Movement launched on August 8, 1942 by Mahatma Gandhi with slogan "Do or Die" at Gowalia Tank (August Kranti Maidan), Mumbai.' },
+        { date: '2025-08-15', category: 'National', priority: 'High', content: 'India gained independence on August 15, 1947; first Prime Minister Jawaharlal Nehru hoisted national flag at Red Fort, Delhi.' },
+        { date: '2025-12-28', category: 'History', priority: 'High', content: 'Indian National Congress founded on December 28, 1885 in Bombay by Allan Octavian Hume; first session presided by W.C. Bonnerjee.' },
+        
+        // ===== GEOGRAPHY (Physical & Indian Geography) =====
+        { date: '2025-03-22', category: 'Geography', priority: 'High', content: 'Ganga is longest river in India (2525 km); originates from Gangotri Glacier (Uttarakhand); flows through 5 states into Bay of Bengal.' },
+        { date: '2025-05-25', category: 'Geography', priority: 'High', content: 'India shares land borders with 7 countries: Pakistan, Afghanistan, China, Nepal, Bhutan, Myanmar, Bangladesh; maritime borders with Sri Lanka, Maldives, Indonesia.' },
+        { date: '2025-06-10', category: 'Geography', priority: 'High', content: 'Standard Meridian of India: 82°30\'E passes through Mirzapur (UP); Indian Standard Time is UTC+5:30, ahead of GMT by 5 hours 30 minutes.' },
+        { date: '2025-07-18', category: 'Geography', priority: 'High', content: 'Western Ghats run parallel to western coast covering 6 states; UNESCO World Heritage Site (2012); biodiversity hotspot with 325+ threatened species.' },
+        { date: '2025-09-12', category: 'Geography', priority: 'High', content: 'Tropic of Cancer (23°30\'N) passes through 8 Indian states: Gujarat, Rajasthan, MP, Chhattisgarh, Jharkhand, West Bengal, Tripura, Mizoram.' },
+        
+        // ===== ECONOMICS (Important Terms & Institutions) =====
+        { date: '2025-04-01', category: 'Economics', priority: 'High', content: 'Reserve Bank of India established on April 1, 1935; nationalized in 1949; headquarters in Mumbai; regulates monetary policy and currency.' },
+        { date: '2025-07-01', category: 'Economics', priority: 'High', content: 'GST (Goods and Services Tax) implemented from July 1, 2017; replaced 17 indirect taxes; four tax slabs: 5%, 12%, 18%, 28%.' },
+        { date: '2025-08-20', category: 'Economics', priority: 'High', content: 'NITI Aayog replaced Planning Commission in 2015; serves as policy think tank; CEO is ex-officio Secretary; headed by Prime Minister.' },
+        { date: '2025-10-15', category: 'Economics', priority: 'High', content: 'SEBI (Securities Exchange Board of India) established in 1992 under SEBI Act; regulates stock exchanges and protects investor interests; headquarters in Mumbai.' },
+        
+        // ===== SCIENCE & TECHNOLOGY (Space & Achievements) =====
+        { date: '2025-04-19', category: 'Space', priority: 'High', content: 'Aryabhata was India\'s first satellite launched on April 19, 1975 by Soviet Union from Kapustin Yar; named after mathematician Aryabhata.' },
+        { date: '2025-08-23', category: 'Science', priority: 'High', content: 'Chandrayaan-3 successfully landed on Moon\'s South Pole on August 23, 2023; India became 4th country to achieve lunar soft landing after USA, USSR, China.' },
+        { date: '2025-09-24', category: 'Space', priority: 'High', content: 'Mars Orbiter Mission (Mangalyaan) launched in November 2013; reached Mars orbit on September 24, 2014; India first Asian nation to reach Mars in first attempt.' },
+        { date: '2025-11-05', category: 'Science', priority: 'High', content: 'C.V. Raman discovered Raman Effect on February 28, 1928; won Nobel Prize in Physics in 1930; National Science Day celebrated on February 28.' },
+        
+        // ===== SPORTS & AWARDS =====
+        { date: '2025-08-29', category: 'Sports', priority: 'High', content: 'Major Dhyan Chand known as Hockey Wizard; won 3 Olympic gold medals (1928, 1932, 1936); National Sports Day celebrated on his birth anniversary August 29.' },
+        { date: '2025-08-07', category: 'Sports', priority: 'High', content: 'Neeraj Chopra won India\'s first Olympic gold in athletics (Javelin) at Tokyo 2020 on August 7, 2021; also won World Championship gold in 2023.' },
+        { date: '2025-11-22', category: 'Awards', priority: 'High', content: 'Bharat Ratna is highest civilian award instituted in 1954; limited to maximum 3 recipients per year; no monetary grant; can be awarded posthumously.' },
+        { date: '2025-12-10', category: 'Awards', priority: 'High', content: 'Nobel Prize awarded annually since 1901 in Physics, Chemistry, Medicine, Literature, Peace, Economics; presented on December 10 (Alfred Nobel\'s death anniversary).' },
+        
+        // ===== DEFENSE & MILITARY =====
+        { date: '2025-01-15', category: 'Defense', priority: 'High', content: 'Indian Army Day celebrated on January 15; commemorates Field Marshal K.M. Cariappa becoming first Indian Commander-in-Chief in 1949.' },
+        { date: '2025-04-08', category: 'Defense', priority: 'High', content: 'Indian Air Force Day celebrated on October 8; established in 1932 as Royal Indian Air Force; "Royal" prefix dropped in 1950.' },
+        { date: '2025-09-02', category: 'Defense', priority: 'High', content: 'INS Vikrant commissioned in September 2022; India\'s first indigenous aircraft carrier; built at Cochin Shipyard; displaces 45,000 tons.' },
+        { date: '2025-12-04', category: 'Defense', priority: 'High', content: 'Indian Navy Day celebrated on December 4; commemorates Operation Trident during 1971 Indo-Pak war when Indian Navy attacked Karachi harbor.' },
+        
+        // ===== CULTURE & HERITAGE =====
+        { date: '2025-06-21', category: 'Culture', priority: 'High', content: 'International Yoga Day celebrated on June 21 since 2015; proposed by PM Modi at UN General Assembly in 2014; recognized by 193 member nations.' },
+        { date: '2025-10-02', category: 'National', priority: 'High', content: 'Gandhi Jayanti celebrated on October 2; Mahatma Gandhi born in 1869 at Porbandar, Gujarat; also celebrated as International Day of Non-Violence.' },
+        { date: '2025-11-14', category: 'Culture', priority: 'High', content: 'Children\'s Day celebrated on November 14; birth anniversary of Jawaharlal Nehru who loved children and was called "Chacha Nehru".' },
+        { date: '2025-12-06', category: 'History', priority: 'High', content: 'Mahaparinirvan Diwas observed on December 6; Dr. B.R. Ambedkar passed away in 1956; conferred Bharat Ratna posthumously in 1990.' },
+        
+        // ===== ENVIRONMENT & WILDLIFE =====
+        { date: '2025-07-29', category: 'Environment', priority: 'High', content: 'Project Tiger launched in 1973 with 9 tiger reserves; currently 53 tiger reserves; tiger population increased from 1,411 (2006) to 3,682 (2022).' },
+        { date: '2025-10-12', category: 'Environment', priority: 'High', content: 'Kaziranga National Park in Assam is home to two-thirds of world\'s one-horned rhinoceros; UNESCO World Heritage Site since 1985.' },
+        
+        // ===== LITERATURE & AUTHORS =====
+        { date: '2025-05-07', category: 'Literature', priority: 'High', content: 'Rabindranath Tagore won Nobel Prize in Literature in 1913 for Gitanjali; first non-European Nobel laureate in Literature; wrote Jana Gana Mana.' },
+        { date: '2025-08-19', category: 'Books', priority: 'High', content: 'Discovery of India written by Jawaharlal Nehru in 1944 during imprisonment at Ahmednagar Fort; covers Indian history, culture, and philosophy.' },
+        
+        // ===== MONUMENTS & ARCHITECTURE =====
+        { date: '2025-09-17', category: 'Heritage', priority: 'High', content: 'Qutub Minar in Delhi built by Qutub-ud-din Aibak in 1193; tallest brick minaret in world at 72.5 meters; UNESCO World Heritage Site since 1993.' },
+        { date: '2025-11-17', category: 'Monuments', priority: 'High', content: 'Taj Mahal built by Shah Jahan in memory of wife Mumtaz Mahal; completed in 1653; UNESCO World Heritage Site; one of Seven Wonders of World.' },
+        
+        // ===== IMPORTANT COMMITTEES & COMMISSIONS =====
+        { date: '2025-12-26', category: 'Polity', priority: 'High', content: 'Election Commission of India established on January 25, 1950; currently has 3 Election Commissioners; conducts elections to Parliament, State Legislatures, President, VP.' }
+    ],
 
     '2024': [
         { date: '2024-01-22', category: 'Culture', priority: 'High', content: 'Ram Mandir Pran Pratishtha ceremony held in Ayodhya, presided over by PM Narendra Modi.' },
