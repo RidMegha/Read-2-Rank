@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 
 import { useAuth } from '../context/AuthContext';
 import { Award, Bookmark, TrendingUp, Calendar, Zap, Activity, Trash2, BookmarkCheck } from 'lucide-react';
 
-// const API = 'http://localhost:5000';
-
 const Dashboard = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [stats, setStats] = useState({
         streak: 0,
@@ -238,10 +237,10 @@ const Dashboard = () => {
                 )}
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions - FIXED NAVIGATION */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <a 
-                    href="gk/today" 
+                <div 
+                    onClick={() => navigate('/gk/today')}
                     className="group relative overflow-hidden block p-8 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 rounded-2xl text-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -252,10 +251,10 @@ const Dashboard = () => {
                         <h3 className="font-bold text-xl mb-2">Today's GK</h3>
                         <p className="text-blue-100 text-sm font-medium">View latest updates</p>
                     </div>
-                </a>
+                </div>
                 
-                <a 
-                    href="/" 
+                <div 
+                    onClick={() => navigate('/')}
                     className="group relative overflow-hidden block p-8 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 hover:from-green-600 hover:via-emerald-700 hover:to-teal-700 rounded-2xl text-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -266,10 +265,10 @@ const Dashboard = () => {
                         <h3 className="font-bold text-xl mb-2">Daily News</h3>
                         <p className="text-green-100 text-sm font-medium">Read current affairs</p>
                     </div>
-                </a>
+                </div>
                 
-                <a 
-                    href="revision" 
+                <div 
+                    onClick={() => navigate('/revision')}
                     className="group relative overflow-hidden block p-8 bg-gradient-to-br from-purple-500 via-violet-600 to-fuchsia-600 hover:from-purple-600 hover:via-violet-700 hover:to-fuchsia-700 rounded-2xl text-white shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -280,7 +279,7 @@ const Dashboard = () => {
                         <h3 className="font-bold text-xl mb-2">GK Archive</h3>
                         <p className="text-purple-100 text-sm font-medium">Browse past events</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     );
